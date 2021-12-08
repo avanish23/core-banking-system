@@ -17,7 +17,9 @@ export default function Dashboard(props){
                 window.location.href="login";
             }
             else
-            {setName(
+            {
+              console.log(result.data);
+              setName(
               "Hello "+result.data.first_name+" "+result.data.middle_name+" "+result.data.last_name
             )}
        }).catch((err) => console.log(err.message));
@@ -32,19 +34,27 @@ export default function Dashboard(props){
         names();
       }, []);
 
-
-    return(
+   return(
         <div>
             <h1> {name} </h1>
             <button><Link to="/account">Open an account</Link></button>
             <button><Link to="/balance">Check Balance</Link></button>
             <button><Link to="/transaction">Send Money</Link></button>
             <button><Link to="/seeTransaction">See Transactions</Link></button>
-            <button><Link to="/approve">Approve</Link></button>
             <button><Link to="/loans">Loans</Link></button>
             
 
             <button onClick={onLogout} placeholder="Logout">Logout</button>
         </div>
     )
+
+    // else if(req.role==="Employee"){
+    //   return(
+    //     <div>
+    //       <h1> {name} </h1>
+    //       <button><Link to="/approve">Approve</Link></button>
+    //       <button onClick={onLogout} placeholder="Logout">Logout</button>
+    //     </div>
+    //   )
+    // }
 }

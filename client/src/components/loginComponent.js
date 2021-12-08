@@ -6,12 +6,14 @@ export default function Login(props){
 
   const [credential, setCredential] = useState({
     aadhar: 0,
-    password: ""
+    password: "",
+    
 })
 
 
 function handleSubmit(event){
   event.preventDefault();
+  console.log(credential)
   axios.post("http://localhost:5000/auth/login", credential)
             .then(result => {
                 if (result.data.msg === "Password Incorrect!" || result.data.msg === "User does not exist") {
@@ -19,9 +21,9 @@ function handleSubmit(event){
                 } else if(result.data.jwtToken) {
                     const parseRes = result.data.jwtToken;
                     localStorage.setItem("jwt_token", parseRes);
-                    // browserHistory.push("/home");
+                    
                     window.location.href = '/dashboard';
-                    // alert("Logged in!");
+                    
                 }
                 else{
                     
@@ -50,9 +52,9 @@ return(
     <form onSubmit={handleSubmit}>
       <input type="number" onChange={handleChange} name="aadhar" placeholder="Aadhar Number" value={credential.aadhar} />
       <input type="password" onChange={handleChange} name="password" placeholder="Password" value={credential.password} />
+
       <button type="submit" placeholder="Submit">Submit</button>
     </form>
-    {/* <a href="/register">New User? Register here</a> */}
     <Link to="/register">New User? Register here</Link>
 
 

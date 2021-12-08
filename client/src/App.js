@@ -14,6 +14,8 @@ import './App.css';
 import SeeTransaction from "./components/seeTransactionComponent";
 import Loan from "./components/loanComponent";
 import ApproveLoan from "./components/approveLoanComponent";
+import EmployeeDashboard from "./components/empDashboardComponent";
+import EmployeeLogin from "./components/empLoginComponent";
 
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
             <Route exact path="/seeTransaction" component={SeeTransaction}/>
             <Route exact path="/loans" component={Loan}/>
             <Route exact path="/approve" component={ApproveLoan}/>
+            <Route exact path="/empdashboard" component={EmployeeDashboard}/>
+            <Route exact path="/emplogin" component={EmployeeLogin}/>
 
         
       </Router>

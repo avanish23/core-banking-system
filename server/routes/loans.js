@@ -3,6 +3,7 @@ const pool = require("../database");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const authorization = require("../middleware/authorization");
+const empauthorization=require("../middleware/empauthorization");
 
 router.post("/applyLoan", authorization, async (req, res) => {
     const { lamount, interest, tenure, ltype, accnum, password } = req.body;
@@ -16,7 +17,7 @@ router.post("/applyLoan", authorization, async (req, res) => {
         if (accounts.rows.length === 0) {
             return res.status(200).json({msg:"Please open an account with us to be able to apply for a loan"});
         }
-        const outs = lamount + (lamount * interest * tenure / 100);
+        const outs = parseInt(lamount)+ (parseInt(lamount) *parseInt(interest) * parseInt(tenure)/ 100);
         const loan = await pool.query("INSERT INTO loans(amount,outstanding_amount,interest,tenure,loan_type,account_number,status) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *", [lamount, outs, interest, tenure, ltype, accnum, "Pending"]);
         return res.json({msg:"We have recieved your loan application! We will get back to you in 3-4 working days! Thanks!"});
 
@@ -27,7 +28,7 @@ router.post("/applyLoan", authorization, async (req, res) => {
     }
 });
 
-    router.get("/approveLoan",authorization,async (req,res)=>{
+    router.get("/approveLoan",empauthorization,async (req,res)=>{
         try {
             const loans =await pool.query("SELECT * FROM loans where status=$1",['Pending']);
             
@@ -38,11 +39,11 @@ router.post("/applyLoan", authorization, async (req, res) => {
         }
     })
 
-    router.post("/approveLoan",authorization,async (req,res)=>{
+    router.post("/approveLoan",empauthorization,async (req,res)=>{
             const {loanid,accnum,lamount}=req.body;
             try {
                 const loan= await pool.query("UPDATE loans set status='Approved' where loan_number=$1",[loanid]);
-                const credit = await pool.query("UPDATE ACCOUNTS set balance = balance+$3 where customer_id=$1 and account_number=$2",[req.user,accnum,lamount]);
+                const credit = await pool.query("UPDATE ACCOUNTS set balance = balance+$2 where account_number=$1",[accnum,lamount]);
                 const tcredit = await pool.query("INSERT INTO TRANSACTIONS(recipient_account,amount,ttype,account_number) VALUES($1,$2,$3,$4) RETURNING *", [accnum, lamount, "Loan", "c94d2019-10d5-4341-926d-e8e38142e7ff"]);
 
                 res.json({msg:"Loan approved"});
@@ -56,7 +57,7 @@ router.post("/applyLoan", authorization, async (req, res) => {
     router.post("/rejectLoan",authorization,async (req,res)=>{
         const {loanid,accnum}=req.body;
         try {
-            const loan= await pool.query("UPDATE loans set status='Rejected' where loan_number=$1"[loanid]);
+            const loan= await pool.query("UPDATE loans set status='Rejected' where loan_number=$1",[loanid]);
             
             res.json({msg:"Loan rejected"});
             

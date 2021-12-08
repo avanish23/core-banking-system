@@ -17,7 +17,7 @@ export default function ApproveLoan(props){
 
     function names() {
         axios.get("http://localhost:5000/dashboard/", config).then(result => {
-            if (result.data.msg === "Token Invalid" || result.data.msg === "Not Authorized") {
+            if (result.data.msg === "Token Invalid" || result.data.msg === "Not Authorized"|| result.data.msg==="Access denied") {
 
                 window.location.href = "login";
             }

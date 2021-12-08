@@ -12,7 +12,6 @@ app.use("/dashboard",require("./routes/dashboard"));
 app.use("/accounts",require("./routes/bankAccounts"));
 app.use("/transaction",require("./routes/transaction"));
 app.use("/loans",require("./routes/loans"));
-app.use("/simply",require("./routes/simply"));
 
 app.listen(5000, ()=>{
 

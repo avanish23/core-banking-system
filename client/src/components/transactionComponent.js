@@ -23,6 +23,12 @@ export default function Transaction(props) {
         names();
     }, []);
 
+    useEffect(() => {
+        if(debit.length!==0)
+            alert("Money Transferred Successfully \n "+"Transaction ID: " + debit[0].transaction_id);
+
+    }, [debit]);
+
     function names() {
         axios.get("http://localhost:5000/dashboard/", config).then(result => {
             if (result.data.msg === "Token Invalid" || result.data.msg === "Not Authorized") {
@@ -55,9 +61,7 @@ export default function Transaction(props) {
                 
                 else {
                     setDebit(result.data);
-                    
-                    alert("Money Transferred Successfully \n "+"Transaction ID: " + debit[0].transaction_id);
-                    // window.location.href="/balance";
+                    window.location.href="/balance";
                 }
             }
         ).catch((err) => console.log(err.message));
